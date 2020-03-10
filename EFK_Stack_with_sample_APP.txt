@@ -1,0 +1,47 @@
+EFK Stack with sample APP:
+
+# https://mherman.org/blog/logging-in-kubernetes-with-elasticsearch-Kibana-fluentd/
+
+# https://docs.fluentd.org/v/0.12/articles/docker-logging-efk-compose
+
+### Python flask app with logging:
+# https://www.scalyr.com/blog/getting-started-quickly-with-flask-logging/
+
+# https://gist.github.com/ibeex/3257877
+
+### Metricbeat tutorial (Collect metrics from OS and services):
+# https://logz.io/blog/metricbeat-tutorial/
+
+# Docker run Metricbeat:
+$ sudo docker run -v /home/develeap/Desktop/projects/efk/efk-stack-custom/metricbeat/metricbeat.yaml:/usr/share/metricbeat/metricbeat.yml -v /var/run/docker.sock:/var/run/docker.sock docker.elastic.co/beats/metricbeat:7.4.2
+
+### Kibana Dashboard Visualization:
+
+# On Kibana url, under Discover (After creating an index...), Expand "Available fields", add field, visualize...
+
+### How to use Elasticsearch, Logstash and Kibana to visualise logs in Python in realtime
+
+# https://www.freecodecamp.org/news/how-to-use-elasticsearch-logstash-and-kibana-to-visualise-logs-in-python-in-realtime-acaab281c9de/
+
+### Docker-metricbeat-example:
+
+# https://github.com/ypereirareis/docker-metricbeat-example
+
+### Metricbeat config file path:
+# ~/Desktop/projects/efk/efk-stack-custom/metricbeat/docker-metricbeat-example/docker/metricbeat/metricbeat-host.
+
+### ELK-stack-docker:
+# https://gitlab.twizzel.net/hva/sfs-power-monitoring/elk-stack-docker/-/tree/6055f0e59e4e0afaf978def516890d4f76a01dc3
+
+
+### Docker-Metricbeat-Fluentd:
+$ cd ~/Desktop/projects/efk/docker-metricbeat-example
+$ sudo docker-compose -f docker-compose.yml.bak up
+- Kibana URL: http://localhost:5666/
+- "Management" -> "Index Patterns" -> "Create index pattern" -> "fluent*"
+
+### Sending Docker Logs to ElasticSearch and Kibana with FileBeat:
+# https://www.sarulabs.com/post/5/2019-08-12/sending-docker-logs-to-elasticsearch-and-kibana-with-filebeat.html
+
+### Metricbeat Filesystem monitoring:
+# https://www.elastic.co/guide/en/beats/metricbeat/current/exported-fields-system.html

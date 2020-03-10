@@ -1,0 +1,82 @@
+version: '2'
+services:
+  web:
+#    image: fluentd-node-sample:latest
+    build: ./python-app
+    ports:
+            - "5001:5000"
+    links:
+      - fluentd
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: httpd.access
+
+  fluentd:
+    build: ./fluentd
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+    links:
+      - "elasticsearch"
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+
+  elasticsearch:
+    image: elasticsearch:7.4.2
+    environment:
+            discovery.type: single-node
+    expose:
+      - 9200
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    image: kibana:7.4.2
+    links:
+      - "elasticsearch"
+    ports:
+      - "5601:5601"
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.4.2
+    command: -e
+    environment:
+      - "WAIT_FOR_HOSTS=elasticsearch:9200 kibana:5601"
+      - "HOST_ELASTICSEARCH=elasticsearch:9200"
+      - "HOST_KIBANA=kibana:5601"
+    links:
+      - "elasticsearch"
+      - "kibana"
+    volumes:
+      - /home/develeap/Desktop/projects/efk/efk-stack-custom/metricbeat/metricbeat.yaml:/usr/share/metricbeat/metricbeat.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - "kibana"
+
+  logstash:
+    build:
+      context: logstash/
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+            - "5044:5044"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+
+
+
+        #  logstash:
+        #image: logstash:7.4.2
+        #links:
+        #- "elasticsearch"
+        #volumes:
+        #- ./logstash:/config-dir
+        #command: logstash -f /config-dir/logstash.conf
+        #depends_on:
+        #- "elasticsearch"
